@@ -1,0 +1,36 @@
+{
+  "name": "chinapfm-nextjs",
+  "version": "1.0.0",
+  "description": "Upload and clean transactions from China-based financial institutions",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youngchingjui/chinapfm-nextjs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/youngchingjui/chinapfm-nextjs/issues"
+  },
+  "homepage": "https://github.com/youngchingjui/chinapfm-nextjs#readme",
+  "dependencies": {
+    "next": "^14.1.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.24",
+    "@types/react": "18.2.63",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.1.2",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  }
+}
