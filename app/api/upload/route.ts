@@ -1,15 +1,23 @@
 import csv from "csv-parser"
 import fs from "fs"
+import { NextApiRequest, NextApiResponse } from "next"
 import stream from "stream"
 import { promisify } from "util"
 
-// This is a standard Node.js stream utility function. We're using it to create a stream pipeline
 const pipeline = promisify(stream.pipeline)
 
-export async function upload(prevState: any, formData: FormData) {
-    const file = formData.get("file")
+export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
+    const body = await req.body
+    const file = req.file
 
-    if (typeof file === "object") let pipelineStream = new stream.PassThrough()
+    if (typeof file !== "object" || !file || !file.path) {
+        res.status(400).json({
+            error: "Invalid file upload. Please upload a file.",
+        })
+        return
+    }
+
+    let pipelineStream = new stream.PassThrough()
 
     let lineCount = -1
 
@@ -37,5 +45,7 @@ export async function upload(prevState: any, formData: FormData) {
     const newFilePath = "/path/to/save/new/file.csv"
     await pipeline(pipelineStream, fs.createWriteStream(newFilePath))
 
-    return { message: "this is a response for file upload" }
+    return res
+        .status(200)
+        .json({ message: "this is a response for file upload" })
 }
