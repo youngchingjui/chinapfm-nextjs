@@ -1,20 +1,30 @@
 import csv from "csv-parser"
 import fs from "fs"
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextRequest } from "next/server"
 import stream from "stream"
 import { promisify } from "util"
 
 const pipeline = promisify(stream.pipeline)
 
-export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
-    const body = await req.body
-    const file = req.file
+export interface NodeJSFile {
+    name: string
+    size: number
+    type: string
+    extension: string
+    content: ArrayBuffer
+}
 
-    if (typeof file !== "object" || !file || !file.path) {
-        res.status(400).json({
-            error: "Invalid file upload. Please upload a file.",
-        })
-        return
+export const POST = async (req: NextRequest) => {
+    const formData = await req.formData()
+    const file = formData.get("file") as File
+
+    if (!file || typeof file !== "object" || !file.hasOwnProperty("path")) {
+        return Response.json(
+            {
+                error: "Invalid file upload. Please upload a file.",
+            },
+            { status: 400 },
+        )
     }
 
     let pipelineStream = new stream.PassThrough()
@@ -45,7 +55,5 @@ export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
     const newFilePath = "/path/to/save/new/file.csv"
     await pipeline(pipelineStream, fs.createWriteStream(newFilePath))
 
-    return res
-        .status(200)
-        .json({ message: "this is a response for file upload" })
+    return Response.json({ message: "this is a response for file upload" })
 }
